@@ -8,5 +8,7 @@
  git code . ( this will open a CS code via command promt)
 
  git status (this will tell you the files that are modified after the last commit)
+
+ git blame name_of_file (this is to see who has done what changes or commit)
  
 
