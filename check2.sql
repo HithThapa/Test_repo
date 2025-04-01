@@ -628,7 +628,7 @@ SELECT DISTINCT
 
 FROM `cp-saa-prod-ext-data-ingst.LatAm_Catalogs.BR_Nielsen_RE_Area`
 WHERE (UPPER(TRIM(RE_desc)) IN ('TOTAL RE', 'C&C', 'DRUGS', 'H&S', 'SUPER', 'HIPER', 'SUPER GDE', 'SUPER PEQ'))
-  --AND (UPPER(TRIM(State_desc)) = 'BR')
+  AND (UPPER(TRIM(State_desc)) = 'BR')
   AND (UPPER(TRIM(Area_desc)) != '') AND (UPPER(TRIM(Area_desc)) IS NOT NULL)
   AND (UPPER(TRIM(MKT_LDESC)) != '') AND (UPPER(TRIM(MKT_LDESC)) IS NOT NULL);
 
@@ -664,7 +664,6 @@ SELECT
     M.Area        		    		AS Area,
     M.RE        			   	   	AS RE,
     M.RE1                      	    AS RE1, 
-	M.UF,
     -- Dados de Produto
     P.Manufacturer        	    	AS Manufacturer,
     IFNULL(P.Brand,
@@ -1024,7 +1023,6 @@ SELECT
     M.Area        		    	  	AS Area,
     M.RE        			      	AS RE,
     M.RE1                         	AS RE1, 
-	M.UF,
     -- Dados de Produto
     P.Manufacturer        	      	AS Manufacturer,
     IFNULL(P.Brand,
@@ -1414,7 +1412,6 @@ SELECT
     Area,
     RE,
     RE1						AS RE_Market, 
-	UF,
     -- Dados de Produto
     Manufacturer,
     Brand,
@@ -1581,8 +1578,7 @@ GROUP BY
     Market,    	
     Area,
     RE,
-    RE1,
-    UF, 	
+    RE1, 
     Manufacturer,
     Brand,
     SubBrand,
@@ -1640,7 +1636,6 @@ SELECT
     Area,
     RE,
     RE_Market, 
-	UF,
     -- Dados de Produto
     Manufacturer,
     Brand,
@@ -1715,7 +1710,6 @@ SELECT
 	promo_indicator
 
     FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Nielsen_Scan_Base`
-	WHERE UF = 'BR'
 -- ==============================================================================	
 -- COLOCAR A CONDIÇÃO PARA NÃO TRAZER OU TRAZER O NOVO MARKET: TOTAL ECOMMERCE/BR
 -- AND market <> 'TOTAL ECOMMERCE/BR'	
@@ -1858,7 +1852,6 @@ SELECT
   FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Nielsen_Scan_Base`	
   WHERE
     Year BETWEEN EXTRACT(YEAR FROM MAX_DATE_SCAN)-FYLen AND EXTRACT(YEAR FROM MAX_DATE_SCAN)-1
-	AND UF = 'BR'
 -- ==============================================================================	
 -- COLOCAR A CONDIÇÃO PARA NÃO TRAZER OU TRAZER O NOVO MARKET: TOTAL ECOMMERCE/BR
 -- AND market <> 'TOTAL ECOMMERCE/BR'	
@@ -2008,7 +2001,7 @@ SELECT
   FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Nielsen_Scan_Base`
   WHERE
     Year >= EXTRACT(YEAR FROM MAX_DATE_SCAN) - YTDLen  AND
-	week_ajusted <= MaxWeek and week_ajusted >0 AND UF = 'BR'
+	week_ajusted <= MaxWeek and week_ajusted >0
 -- ==============================================================================	
 -- COLOCAR A CONDIÇÃO PARA NÃO TRAZER OU TRAZER O NOVO MARKET: TOTAL ECOMMERCE/BR
 -- AND market <> 'TOTAL ECOMMERCE/BR'	
@@ -2156,7 +2149,6 @@ SELECT
   FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Nielsen_Scan_Base`
   WHERE
     DATE(Year, Month, 1) >= DATE_SUB(DATE(EXTRACT(YEAR FROM MAX_DATE), EXTRACT(MONTH FROM MAX_DATE), 1), INTERVAL MonthLen-1 MONTH) 
-    AND UF = 'BR'
 -- ==============================================================================	
 -- COLOCAR A CONDIÇÃO PARA NÃO TRAZER OU TRAZER O NOVO MARKET: TOTAL ECOMMERCE/BR
 -- AND market <> 'TOTAL ECOMMERCE/BR'	
@@ -2340,7 +2332,6 @@ SELECT
     FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Nielsen_Scan_Base` MONTHLY
     WHERE
     DATE(EXTRACT(YEAR FROM data_scan_msg),EXTRACT(MONTH FROM data_scan_msg), 1) >= DATE_SUB(DATE(EXTRACT(YEAR FROM MAX_DATE), EXTRACT(MONTH FROM MAX_DATE), 1), INTERVAL MonthLen-1 MONTH) 
-    AND UF = 'BR'
 -- ==============================================================================	
 -- COLOCAR A CONDIÇÃO PARA NÃO TRAZER OU TRAZER O NOVO MARKET: TOTAL ECOMMERCE/BR
 -- AND market <> 'TOTAL ECOMMERCE/BR'	
@@ -2494,7 +2485,7 @@ UNION ALL
 	
   FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Nielsen_Scan_Base`
   WHERE
-     EndDate >= DATE_SUB(MAX_DATE, INTERVAL WeekLen * 7 DAY) AND UF = 'BR'
+     EndDate >= DATE_SUB(MAX_DATE, INTERVAL WeekLen * 7 DAY)
 -- ==============================================================================	
 -- COLOCAR A CONDIÇÃO PARA NÃO TRAZER OU TRAZER O NOVO MARKET: TOTAL ECOMMERCE/BR
 -- AND market <> 'TOTAL ECOMMERCE/BR'	
@@ -2652,7 +2643,6 @@ UNION ALL
   FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Nielsen_Scan_Base`
   WHERE
     DATE(Year, Month, 1) >= DATE_SUB(DATE(EXTRACT(YEAR FROM MAX_DATE), EXTRACT(MONTH FROM MAX_DATE), 1), INTERVAL MonthLen-1 MONTH) 
-    AND UF = 'BR'
 -- ==============================================================================	
 -- COLOCAR A CONDIÇÃO PARA NÃO TRAZER OU TRAZER O NOVO MARKET: TOTAL ECOMMERCE/BR
 -- AND market <> 'TOTAL ECOMMERCE/BR'	
@@ -2916,7 +2906,6 @@ SELECT 'Monthly' 			      AS Date_Type,
 		Segment				      AS Segment,
 		Area				      AS Area,		
 		RE_Market			      AS RE,
-		UF,
 		Country				      AS country,
 		Manufacturer	   	      AS manufacturer,
 		Brand				      AS brand,
@@ -2961,7 +2950,7 @@ SELECT 'Monthly' 			      AS Date_Type,
 		SUM(Base_Volume)) 	      AS Base_Price_Volume,
         promo_indicator,
 		    COALESCE(SAFE_DIVIDE(SUM(Value),
-    SUM(SUM(Value)) OVER(PARTITION BY Year, Month,Area, UF, RE_Market, Category)), 0)      AS SOM_Sales,
+    SUM(SUM(Value)) OVER(PARTITION BY Year, Month,Area, RE_Market, Category)), 0)      AS SOM_Sales,
 	
 	MAX(ND) AS ND, 
     MAX(WD) AS WD, 
@@ -2987,7 +2976,6 @@ SELECT 'Monthly' 			      AS Date_Type,
 		Segment,
 		Area,		
 		RE_Market,
-		UF,
 		country,
 		EndDate,
 		manufacturer,
@@ -3013,7 +3001,6 @@ SELECT 'Quarter' 			      AS Date_Type,
 		Segment				      AS Segment,
 		Area				      AS Area,		
 		RE_Market			      AS RE,
-		UF,
 		Country				      AS country,
 		Manufacturer		      AS manufacturer,
 		Brand			      	  AS brand,
@@ -3054,7 +3041,7 @@ SELECT 'Quarter' 			      AS Date_Type,
 		SUM(Base_Volume)) 	      AS Base_Price_Volume,
         promo_indicator,
 		    COALESCE(SAFE_DIVIDE(SUM(Value),
-    SUM(SUM(Value)) OVER(PARTITION BY Year, Quarter, Area, UF, RE_Market, Category)), 0)      AS SOM_Sales,
+    SUM(SUM(Value)) OVER(PARTITION BY Year, Quarter, Area,RE_Market, Category)), 0)      AS SOM_Sales,
 	
 	MAX(ND) AS ND, 
     MAX(WD) AS WD, 
@@ -3079,7 +3066,6 @@ SELECT 'Quarter' 			      AS Date_Type,
 		Segment,
 		Area,		
 		RE_Market,
-		UF,
 		country,
 		manufacturer,
 		brand,
@@ -3101,7 +3087,6 @@ SELECT 'YTD' 			   	      AS Date_Type,
 		Segment			    	  AS Segment,
 		Area				      AS Area,		
 		RE_Market			      AS RE,
-		UF,
 		Country				      AS country,
 		Manufacturer		      AS manufacturer,
 		Brand				      AS brand,
@@ -3148,7 +3133,7 @@ SELECT 'YTD' 			   	      AS Date_Type,
 		SUM(Base_Volume)) 	      AS Base_Price_Volume,
         promo_indicator,
 		    COALESCE(SAFE_DIVIDE(SUM(Value),
-    SUM(SUM(Value)) OVER(PARTITION BY Year, Area, UF, RE_Market, Category)), 0)      AS SOM_Sales,
+    SUM(SUM(Value)) OVER(PARTITION BY Year, Area,RE_Market, Category)), 0)      AS SOM_Sales,
 	
 	MAX(ND) AS ND, 
     MAX(WD) AS WD, 
@@ -3173,7 +3158,6 @@ SELECT 'YTD' 			   	      AS Date_Type,
 		Segment,
 		Area,		
 		RE_Market,
-		UF,
 		country,
 		manufacturer,
 		brand,
@@ -3196,7 +3180,6 @@ SELECT 'Weekly' 			      AS Date_Type,
 		Segment				      AS Segment,
 		Area				      AS Area,		
 		RE_Market			      AS RE,
-		UF,
 		Country				      AS country,
 		Manufacturer	   	      AS manufacturer,
 		Brand				      AS brand,
@@ -3241,7 +3224,7 @@ SELECT 'Weekly' 			      AS Date_Type,
 		SUM(Base_Volume)) 	      AS Base_Price_Volume,
         promo_indicator,
 		    COALESCE(SAFE_DIVIDE(SUM(Value),
-    SUM(SUM(Value)) OVER(PARTITION BY Year, Month,Week, UF, Area, RE_Market, Category)), 0)      AS SOM_Sales,
+    SUM(SUM(Value)) OVER(PARTITION BY Year, Month,Week, Area, RE_Market, Category)), 0)      AS SOM_Sales,
 	
 	MAX(ND) AS ND, 
     MAX(WD) AS WD, 
@@ -3265,7 +3248,6 @@ SELECT 'Weekly' 			      AS Date_Type,
 		Segment,
 		Area,		
 		RE_Market,
-		UF,
 		country,
 		EndDate,
 		manufacturer,
@@ -3311,7 +3293,6 @@ SELECT 	Date_Type 			        AS Date_Type,
 		Segment				        AS Segment,
 		Area				        AS Area,		
 		Base.RE					    AS RE,
-		UF,
 		Country				        AS country,
 		Manufacturer		        AS manufacturer,
 		Brand				        AS brand,
@@ -3342,7 +3323,6 @@ SELECT 	Date_Type 			        AS Date_Type,
 FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_PcTrck_tb_Base_Periodostemp` Base
 	LEFT JOIN BASE_CALENDAR BC
 		ON Base.Year = BC.Year AND Base.Month = BC.Month
-		--WHERE  UF = 'BR'
 		
 UNION ALL
 
@@ -3354,7 +3334,6 @@ SELECT 	Date_Type 			        AS Date_Type,
 		Segment				        AS Segment,
 		Area				        AS Area,		
 		Base.RE					    AS RE,
-		UF,
 		Country				        AS country,
 		Manufacturer		        AS manufacturer,
 		Brand				        AS brand,
@@ -3384,7 +3363,6 @@ SELECT 	Date_Type 			        AS Date_Type,
 FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_PcTrck_tb_Base_Periodostemp`	Base
 	LEFT JOIN BASE_CALENDAR BC
 		ON Base.Year = BC.Year AND Base.Month = BC.Month
---WHERE  UF = 'BR'
 
 UNION ALL
 -- PREÇO BASE
@@ -3395,7 +3373,6 @@ SELECT 	Date_Type 			        AS Date_Type,
 		Segment				        AS Segment,
 		Area				        AS Area,		
 		Base.RE					    AS RE,
-		UF,
 		Country				        AS country,
 		Manufacturer		        AS manufacturer,
 		Brand				        AS brand,
@@ -3425,9 +3402,8 @@ SELECT 	Date_Type 			        AS Date_Type,
 		
 FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_PcTrck_tb_Base_Periodostemp` Base
 	LEFT JOIN BASE_CALENDAR BC
-		ON Base.Year = BC.Year AND Base.Month = BC.Month
---WHERE  UF = 'BR'
-;
+		ON Base.Year = BC.Year AND Base.Month = BC.Month;
+
 -- ====================================================================================================================================================================================================
 -- BASE MODELADA PARA O PRICE TRACKING ================================================================================================================================================================
 -- ====================================================================================================================================================================================================
@@ -3443,7 +3419,6 @@ INSERT INTO `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Price_Tracking`
 		Segment,
 		Area,		
 		RE,
-		UF,
 		Country,
 		Manufacturer,
 		Brand,
@@ -3476,7 +3451,6 @@ SELECT Date_Type 			      AS Date_Type,
 		'#TOTAL'		    	  AS Segment,
 		Area				      AS Area,		
 		RE				      	  AS RE,
-		UF,
 		Country			    	  AS country,
 		'#TOTAL'		          AS manufacturer,
 		'#TOTAL'			      AS brand,
@@ -3509,7 +3483,6 @@ GROUP BY Date_Type,
         Short_Category,
 		Area,		
 		RE,
-		UF,
 		Country,
 		Market,
 		RCD_Segment,
@@ -3542,7 +3515,6 @@ GROUP BY Date_Type,
 			Segment				AS Segment,
 			Area				AS Area,		
 			RE					AS RE,
-			UF,
 			Country				AS country,
 			Manufacturer		AS manufacturer,
 			Brand				AS brand,
@@ -3619,7 +3591,6 @@ SELECT 	Date_Type 			        AS Date_Type,
 		ORDER BY Base.EAN ASC) 		AS Category_Rank,
 		Area				        AS Area,		
 		Base.RE					        AS RE,
-		UF,
 		Country				        AS country,
 		Manufacturer		        AS manufacturer,
 		Brand				        AS brand,
@@ -3678,8 +3649,7 @@ BASE_CONCORRENCIA AS (
 		Category         	                AS Category,
 
 	    Area				                AS Area,		
-		Base.RE					            AS RE,
-        UF,		
+		Base.RE					            AS RE,		
 		EndDate				                AS EndDate,
 		Quarter			       	            AS Quarter,
 		Base.Month			                AS Month,
@@ -3720,7 +3690,6 @@ SELECT distinct  A.Date_Type 			AS Date_Type,
 		A.Category_Rank,
 		A.Area				            AS Area,		
 		A.RE					        AS RE,
-		A.UF,
 		A.Country				        AS country,
 		A.Manufacturer		            AS manufacturer,
 		A.Brand				            AS brand,
@@ -3766,7 +3735,7 @@ SELECT distinct  A.Date_Type 			AS Date_Type,
 FROM BASE_ppg A left join Base_concorrencia B on A.ppg_concorrencia = B.ppg_concorrencia 
 --AND A.strategy_index = B.strategy_index
 AND A.RE = B.RE AND A.AREa = b. Area and a.Category = b.Category and A.MOnth = b.Month and a.Year = B.year and a.week = b.Week and a.Quarter = b.Quarter and A.Date_Type = b.Date_Type
-and A.EndDate = b.EndDate AND A.UF = B.UF
+and A.EndDate = b.EndDate
 ),
 
 
@@ -3781,7 +3750,6 @@ SELECT 	Date_Type 			        AS Date_Type,
 		ORDER BY Base.EAN ASC) 		AS Category_Rank,
 		Area				        AS Area,		
 		Base.RE					        AS RE,
-		UF,
 		Country				        AS country,
 		Manufacturer		        AS manufacturer,
 		Brand				        AS brand,
@@ -3837,8 +3805,7 @@ BASE_CONCORRENCIA_TPR AS (
 		Category         	                AS Category,
 
 	    Area				                AS Area,		
-		Base.RE					            AS RE,
-        UF,		
+		Base.RE					            AS RE,		
 		EndDate				                AS EndDate,
 		Quarter			       	            AS Quarter,
 		Base.Month			                AS Month,
@@ -3880,7 +3847,6 @@ SELECT distinct  A.Date_Type 			AS Date_Type,
 		A.Category_Rank,
 		A.Area				            AS Area,		
 		A.RE					        AS RE,
-		A.UF,
 		A.Country				        AS country,
 		A.Manufacturer		            AS manufacturer,
 		A.Brand				            AS brand,
@@ -3925,7 +3891,7 @@ SELECT distinct  A.Date_Type 			AS Date_Type,
 
 FROM BASE_PPG_TPR A left join BASE_CONCORRENCIA_TPR B on A.ppg_concorrencia = B.ppg_concorrencia 
 AND A.strategy_index = B.strategy_index AND A.RE = B.RE AND A.AREa = b. Area and a.Category = b.Category and A.MOnth = b.Month and a.Year = B.year and a.week = b.Week and a.Quarter = b.Quarter and A.Date_Type = b.Date_Type
-and A.EndDate = b.EndDate AND A.UF = B.UF
+and A.EndDate = b.EndDate
 
 ),
 
@@ -3940,7 +3906,6 @@ SELECT 	Date_Type 			        AS Date_Type,
 		ORDER BY Base.EAN ASC) 		AS Category_Rank,
 		Area				        AS Area,		
 		Base.RE					        AS RE,
-		UF,
 		Country				        AS country,
 		Manufacturer		        AS manufacturer,
 		Brand				        AS brand,
@@ -3998,8 +3963,7 @@ BASE_CONCORRENCIA_BASE AS (
 		Category         	                AS Category,
 
 	    Area				                AS Area,		
-		Base.RE					            AS RE,
-        UF,		
+		Base.RE					            AS RE,		
 		EndDate				                AS EndDate,
 		Quarter			       	            AS Quarter,
 		Base.Month			                AS Month,
@@ -4042,7 +4006,6 @@ SELECT distinct  A.Date_Type 			AS Date_Type,
 		A.Category_Rank,
 		A.Area				            AS Area,		
 		A.RE					        AS RE,
-		A.UF,
 		A.Country				        AS country,
 		A.Manufacturer		            AS manufacturer,
 		A.Brand				            AS brand,
@@ -4087,7 +4050,7 @@ SELECT distinct  A.Date_Type 			AS Date_Type,
 
 FROM BASE_PPG_BASE A left join BASE_CONCORRENCIA_BASE B on A.ppg_concorrencia = B.ppg_concorrencia --AND A.ean_concorencia = B.ean_concorencia
 AND A.strategy_index = B.strategy_index AND A.RE = B.RE AND A.AREa = b. Area and a.Category = b.Category and A.MOnth = b.Month and a.Year = B.year and a.week = b.Week and a.Quarter = b.Quarter and A.Date_Type = b.Date_Type
-and A.EndDate = b.EndDate AND A.UF = B.UF
+and A.EndDate = b.EndDate
 
 )
 
@@ -4116,7 +4079,6 @@ CREATE OR REPLACE TABLE `cp-saa-prod-ext-data-ingst.LatAm_Queries.BR_PnP_Price_T
 			Segment				AS Segment,
 			Area				AS Area,		
 			RE					AS RE,
-			UF,
 			Country				AS country,
 			Manufacturer		AS manufacturer,
 			Brand				AS brand,
@@ -4206,7 +4168,7 @@ SELECT
 
 FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Price_Tracking` A
 INNER JOIN `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_PnP_Comparison` B ON A.PPG = B.PnP_PPG1
-WHERE B.Active=1 AND A.Manufacturer <> '#TOTAL' AND  A.UF = 'BR'
+WHERE B.Active=1 AND A.Manufacturer <> '#TOTAL'
 
 UNION ALL
 
@@ -4248,7 +4210,7 @@ SELECT
 
 FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Price_Tracking` A
 INNER JOIN `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_PnP_Comparison` B ON A.PPG = B.PnP_PPG2
-WHERE B.Active=1 AND  A.UF = 'BR';
+WHERE B.Active=1;
 
 -- ####################################################################################################################################################################################################
 -- ####################################################################################################################################################################################################
@@ -4329,7 +4291,6 @@ SUM(Units)   AS Unidades,
 SUM(Value)   AS Valor
 FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Nielsen_Scan_Base`
 WHERE RE !='NC' AND Area!='NC' AND year >=EXTRACT(YEAR FROM MAX_DATE)-2 AND EndDate <= MAX_DATE
-AND UF = 'BR'
 GROUP BY 
 Category, Short_Category, year, RE, RE_Market, Area
 ),
@@ -4362,7 +4323,6 @@ SAFE_DIVIDE(SUM(Base_Value),
 
 FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Nielsen_Scan_Base` 
 WHERE RE !='NC' AND Area!='NC' AND year >=EXTRACT(YEAR FROM MAX_DATE)-2 AND EndDate <= MAX_DATE
-AND UF = 'BR'
 -- ==============================================================================	
 -- COLOCAR A CONDIÇÃO PARA NÃO TRAZER OU TRAZER O NOVO MARKET: TOTAL ECOMMERCE/BR
 -- AND market <> 'TOTAL ECOMMERCE/BR'	
@@ -4803,7 +4763,7 @@ SELECT
     ON B.index_group = c.index_group
 		WHERE A.EndDate <= MaxDate
    		AND AREA NOT IN ('AREA II + III', 'AREA IV + V') AND RE IN ('TOTAL RE', 'C&C', 'DRUGS', 'H&S')
-        AND A.CATEGORY <> 'TOTAL SOAPS' AND UF = 'BR'
+        AND A.CATEGORY <> 'TOTAL SOAPS'
     GROUP BY Area,
     RE,
     RE_Market, 
@@ -4832,7 +4792,7 @@ OPTIONS(expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 2 DAY))
     FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Nielsen_Scan_Base`
 		WHERE EndDate <= MaxDate
 		AND AREA NOT IN ('AREA II + III', 'AREA IV + V') AND RE IN ('TOTAL RE', 'C&C', 'DRUGS', 'H&S')
- AND CATEGORY <> 'TOTAL SOAPS' AND UF = 'BR'
+ AND CATEGORY <> 'TOTAL SOAPS'
 
 	GROUP BY
         EndDate, 
@@ -5151,7 +5111,6 @@ SELECT
 	 MaxDate
 
 FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Nielsen_Scan_Base` 
-WHERE  UF = 'BR'
 -- ==============================================================================	
 -- COLOCAR A CONDIÇÃO PARA NÃO TRAZER OU TRAZER O NOVO MARKET: TOTAL ECOMMERCE/BR
 -- AND market <> 'TOTAL ECOMMERCE/BR'	
@@ -5199,7 +5158,6 @@ SELECT
 	 MaxDate
 
 FROM `cp-saa-prod-ext-data-ingst.LatAm_PnP.BR_Nielsen_Scan_Base` 
-WHERE  UF = 'BR'
 -- ==============================================================================	
 -- COLOCAR A CONDIÇÃO PARA NÃO TRAZER OU TRAZER O NOVO MARKET: TOTAL ECOMMERCE/BR
 -- AND market <> 'TOTAL ECOMMERCE/BR'	
